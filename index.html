@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buddy · Colin's apps</title>
+<!-- Résumé last uploaded 2026-10-27 (see resume.json) -->
+<meta name="description" content="Six apps, one builder: the Buddy family, designed and built by Colin Chiapello with AI coding tools.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23FFD93D'/%3E%3Cpath d='M25 40 Q32 32 40 40M60 40 Q67 32 75 40M25 55 Q50 85 75 55' stroke='%235D4E37' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* Plain black and white around the apps; each app keeps its own logo colour (Colin 10/27: no new colours). */
+  :root { --bg: #FAFAFA; --ink: #111111; --body: #3A3A3A; --muted: #595959; --line: #E5E5E5; --card: #FFFFFF; --panel: #111111; --tile: #222222; --on-panel: #F5F5F5; --on-panel-2: #D4D4D4; --on-panel-3: #ABABAB; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 Inter, system-ui, sans-serif; }
+  a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 88px 24px 80px; display: flex; flex-direction: column; gap: 72px; }
+  .display { font-family: 'Bricolage Grotesque', sans-serif; }
+  .top { position: fixed; top: 0; left: 0; right: 0; z-index: 40; padding-top: env(safe-area-inset-top, 0px); transition: background .12s ease, box-shadow .12s ease; }
+  .top.solid { background: rgba(250,250,250,.92); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 1px 0 var(--line); }
+  .bar { max-width: 1120px; margin: 0 auto; padding: 16px max(24px, env(safe-area-inset-right, 0px)) 16px max(24px, env(safe-area-inset-left, 0px)); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+  .js:not(.static) .top .faces, .js:not(.static) .top .word, .js:not(.static) .top nav { opacity: 0; }
+  .word { display: inline-block; }
+  .word.snap { animation: snap .5s cubic-bezier(.2,1.4,.4,1); }
+  @keyframes snap { 0% { transform: translateY(0); } 35% { transform: translateY(-9px) rotate(-4deg); } 70% { transform: translateY(2px) rotate(2deg); } 100% { transform: none; } }
+  .meet { display: inline-block; margin-right: .26em; }
+  .title-line { display: inline-block; white-space: nowrap; }
+  .top nav { transition: opacity .4s ease .2s; }
+  #fly { position: fixed; inset: 0; pointer-events: none; z-index: 45; }
+  #fly > * { position: absolute; margin: 0; transform-origin: 0 0; transition: transform .8s cubic-bezier(.65,0,.35,1), opacity .4s ease; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 800; font-size: 22px; }
+  .faces { display: flex; }
+  .faces svg + svg { margin-left: -10px; }
+  nav { display: flex; flex-wrap: wrap; gap: 8px; }
+  nav a { min-height: 44px; display: inline-flex; align-items: center; padding: 10px 14px; border-radius: 999px; text-decoration: none; font-weight: 500; }
+  /* Resume: TasteBuddy yellow (the family's lead colour), dark text, so it stands out from the black GitHub pill. */
+  nav a.resume { gap: 6px; padding: 10px 18px; background: #FFD93D; color: var(--ink); font-weight: 700; }
+  nav a.resume:hover { filter: brightness(.95); }
+  nav a.dark { gap: 6px; }
+  nav a.dark { padding: 10px 18px; background: var(--ink); color: #FFFFFF; font-weight: 600; }
+  .hero { display: flex; flex-direction: column; gap: 20px; }
+  .eyebrow { margin: 0; font-size: 14px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  h1 { margin: 0; font-weight: 800; font-size: clamp(40px, 6vw, 64px); line-height: 1.02; letter-spacing: -.02em; max-width: 1000px; text-wrap: balance; }
+  .lede { margin: 0; font-size: 19px; color: var(--body); }
+  .apps-head { display: flex; align-items: center; gap: 16px; }
+  .apps-head h2 { margin: 0; font-weight: 800; font-size: 44px; letter-spacing: -.01em; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 24px; }
+  .card { position: relative; display: flex; flex-direction: column; gap: 16px; padding: 30px 24px 24px; min-height: 260px; border-radius: 20px; background: var(--card); border: 1px solid var(--line); overflow: hidden; }
+  .card::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 6px; background: var(--app); }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .chip { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: #F0F0F0; color: var(--body); }
+  .card h3 { margin: 0 0 6px; font-weight: 700; font-size: 26px; letter-spacing: -.01em; }
+  .card p { margin: 0; color: var(--body); }
+  .chip-strong { background: var(--ink); color: #FFFFFF; }
+  .card-foot { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .live { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; margin-right: 4px; }
+  .live::before { content: ""; width: 8px; height: 8px; border-radius: 4px; background: #1F8A4C; }
+  .visit { margin-left: auto; display: inline-flex; align-items: center; gap: 4px; min-height: 32px; padding: 0 12px; border-radius: 999px; background: var(--ink); color: #FFFFFF; font-size: 13px; font-weight: 600; text-decoration: none; }
+  .visit:hover { filter: brightness(1.3); }
+  .tag { font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--body); }
+  .about { display: flex; flex-wrap: wrap; gap: 40px; padding: 40px; border-radius: 24px; background: var(--panel); color: var(--on-panel); }
+  .about-text { flex: 1 1 320px; display: flex; flex-direction: column; gap: 16px; }
+  .about-text .eyebrow { color: var(--on-panel-3); }
+  .about h2 { margin: 0; font-weight: 700; font-size: 36px; line-height: 1.1; }
+  .about-text p:not(.eyebrow) { margin: 0; color: var(--on-panel-2); }
+  .facts { flex: 1 1 280px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-content: start; }
+  .fact { padding: 18px; border-radius: 16px; background: var(--tile); }
+  .fact p { margin: 0; }
+  .fact .label { font-size: 13px; color: var(--on-panel-3); }
+  .fact .value { margin-top: 4px; font-weight: 600; }
+  .fact a { text-decoration: underline; text-underline-offset: 3px; }
+  footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--muted); }
+  /* Motion: cards arrive in turn; each face does its own move on arrival, hover, tap; smileys follow a press-and-drag. */
+  .card { cursor: pointer; transition: box-shadow .2s ease; }
+  .card:hover, .card:focus-visible { box-shadow: 0 12px 28px rgba(17,17,17,.10); outline: none; }
+  @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+  .logo .eye-r, .logo .smile, .logo .tongue, .logo .drop, .logo .lens, .logo .dollars, .faces svg { transform-box: fill-box; transform-origin: center; }
+  .logo .tongue { transform-origin: top center; }
+  .play .logo { animation: boing .7s ease; }
+  .play .tongue { animation: wag .9s ease; }
+  .play .check { stroke-dasharray: 60; animation: draw .8s ease; }
+  .play .eye-r { animation: sbWink .65s linear; }
+  .play .smile { animation: sbSmile .65s linear; }
+  .play .drop { animation: drip 1s ease-in; }
+  .play .lens { animation: zoom .9s ease; }
+  .play .dollars { animation: cha-ching .8s ease; }
+  @keyframes boing { 0%,100% { transform: none; } 30% { transform: scale(1.12) rotate(-4deg); } 60% { transform: scale(.96) rotate(3deg); } }
+  @keyframes wag { 0%,100% { transform: none; } 20% { transform: rotate(18deg); } 40% { transform: rotate(-18deg); } 60% { transform: rotate(12deg); } 80% { transform: rotate(-8deg); } }
+  @keyframes draw { from { stroke-dashoffset: 60; } to { stroke-dashoffset: 0; } }
+  @keyframes sbWink { 0%, 100% { transform: none; } 25%, 60% { transform: scaleY(0.12); } }
+  @keyframes sbSmile { 0%, 100% { transform: none; } 40% { transform: translateY(7.5px) scaleY(1.25); } }
+  @keyframes drip { 0% { transform: none; opacity: 1; } 70% { transform: translateY(18px); opacity: 0; } 71% { transform: translateY(-6px); opacity: 0; } 100% { transform: none; opacity: 1; } }
+  @keyframes zoom { 0%,100% { transform: none; } 40% { transform: scale(1.35); } 70% { transform: scale(.95); } }
+  @keyframes cha-ching { 0%,100% { transform: none; } 30% { transform: translateY(-6px) scale(1.25); } 55% { transform: translateY(2px) scale(.95); } }
+  .faces.wave svg { animation: wave .6s ease both; }
+  .faces svg:nth-child(2) { animation-delay: .07s; } .faces svg:nth-child(3) { animation-delay: .14s; } .faces svg:nth-child(4) { animation-delay: .21s; } .faces svg:nth-child(5) { animation-delay: .28s; } .faces svg:nth-child(6) { animation-delay: .35s; }
+  @keyframes wave { 0%,100% { transform: none; } 50% { transform: translateY(-7px); } }
+  html, body { overflow-x: clip; }
+  #fx { position: absolute; left: 0; top: 0; width: 100%; height: 0; pointer-events: none; z-index: 50; }
+  /* Opening screen: the six faces say hello, then shrink up into the header as you scroll. */
+  html { overflow-anchor: none; }
+  .intro { display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 16px; }
+  .js:not(.static) .intro { position: fixed; inset: 0; z-index: 44; background: var(--bg); transition: opacity .6s ease; }
+  .js:not(.static) .intro.done { opacity: 0; pointer-events: none; }
+  .static .intro { display: none; }
+  .js:not(.static) #top { opacity: 0; filter: blur(10px); transform: scale(.97); transition: opacity 1s ease, filter 1s ease, transform 1s cubic-bezier(.2,.8,.2,1); }
+  .js:not(.static) #top.lit { opacity: 1; filter: none; transform: none; }
+  .intro-inner { display: flex; flex-direction: column; align-items: center; gap: 22px; }
+  .title-box, .buddy { display: inline-block; transform-origin: 0 0; will-change: transform; }
+  .tip { margin: 4px 0 0; font-size: 14px; color: var(--muted); }
+  .pop { display: block; width: 100%; height: 100%; }
+  .js:not(.static) .intro:not(.enter) .pop, .js:not(.static) .intro:not(.enter) .intro-title { opacity: 0; }
+  .intro.enter .pop { animation: popin .7s cubic-bezier(.2,1.5,.4,1) both; }
+  .buddy:nth-child(1) .pop { animation-delay: .25s; } .buddy:nth-child(2) .pop { animation-delay: .4s; } .buddy:nth-child(3) .pop { animation-delay: .55s; } .buddy:nth-child(4) .pop { animation-delay: .7s; }
+  .buddy:nth-child(5) .pop { animation-delay: .85s; } .buddy:nth-child(6) .pop { animation-delay: 1s; }
+  @keyframes popin { 0% { opacity: 0; transform: translateY(-60px) scale(.3) rotate(-30deg); } 60% { opacity: 1; transform: translateY(8px) scale(1.12) rotate(6deg); } 100% { opacity: 1; transform: none; } }
+  @keyframes titlein { from { opacity: 0; transform: translateY(24px); } }
+  .intro-title { margin: 0; font-weight: 800; font-size: clamp(48px, 9vw, 104px); line-height: 1; letter-spacing: -.03em; }
+  .intro-faces { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(8px, 2vw, 20px); }
+  .buddy { display: block; width: clamp(56px, 11vw, 112px); height: clamp(56px, 11vw, 112px); cursor: pointer; }
+  .buddy svg { width: 100%; height: 100%; }
+  .scroll-cue { margin: 8px 0 0; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .scroll-cue svg { animation: nudge 1.6s ease-in-out infinite; }
+  @keyframes nudge { 0%,100% { transform: none; } 50% { transform: translateY(6px); } }
+  /* Scroll reveals: things rise or fly in from the sides as they reach the screen. */
+  .js .reveal { transition: opacity .9s ease, transform .9s cubic-bezier(.2,.8,.2,1); }
+  .js .reveal:not(.in) { opacity: 0; transform: translateY(40px); }
+  .js .grid .card.reveal:not(.in):nth-child(3n+1) { transform: translateX(-140px) rotate(-6deg); }
+  .js .grid .card.reveal:not(.in):nth-child(3n) { transform: translateX(140px) rotate(6deg); }
+  .js .grid .card.reveal:not(.in):nth-child(3n+2) { transform: scale(.85); }
+  .grid .card:nth-child(3n+2) { transition-delay: .08s; } .grid .card:nth-child(3n) { transition-delay: .16s; }
+  #apps { margin-top: -16px; }
+  .hint { margin-top: 6px; }
+  .grid { margin-top: 0; }
+  #fx svg { position: absolute; width: 40px; height: 40px; margin: -20px 0 0 -20px; animation: pop .35s cubic-bezier(.2,1.6,.4,1) both, fade .5s ease .9s forwards; }
+  @keyframes pop { from { transform: scale(0) rotate(var(--r)); } to { transform: scale(1) rotate(var(--r)); } }
+  @keyframes fade { to { opacity: 0; transform: scale(.6) rotate(var(--r)) translateY(-12px); } }
+  body.drawing { user-select: none; -webkit-user-select: none; }
+  .hint { margin: 0; font-size: 14px; color: var(--muted); }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } #fx { display: none; } }
+  @media (max-width: 520px) { .about { padding: 28px 20px; } .facts { grid-template-columns: minmax(0, 1fr); } .apps-head h2 { font-size: 36px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top"><div class="bar">
+  <a class="brand display" href="#top">
+    <span class="faces" aria-hidden="true">
+      <svg width="34" height="34" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#FAFAFA"/><g transform="translate(5 5) scale(0.9)"><circle cx="50" cy="50" r="45" fill="#FFD93D"/><path d="M25 40 Q32 32 40 40" stroke="#5D4E37" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M60 40 Q67 32 75 40" stroke="#5D4E37" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M25 55 Q50 85 75 55" stroke="#5D4E37" stroke-width="4" fill="none" stroke-linecap="round"/><g class="tongue"><ellipse cx="50" cy="72" rx="12" ry="15" fill="#FF6B6B"/><path d="M50 65 L50 80" stroke="#E55555" stroke-width="2"/></g></g></svg>
+      <svg width="34" height="34" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#FAFAFA"/><g transform="translate(5 5) scale(0.9)"><circle cx="50" cy="50" r="45" fill="#E88C68"/><circle cx="36" cy="40" r="5" fill="#5D4E37"/><circle cx="64" cy="40" r="5" fill="#5D4E37"/><path class="check" d="M30 58 L44 71 L71 49" fill="none" stroke="#5D4E37" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
+      <svg width="34" height="34" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#FAFAFA"/><g transform="translate(5 5) scale(0.9)"><circle cx="50" cy="50" r="45" fill="#4D96FF"/><g fill="#FFFFFF" stroke="#5D4E37" stroke-width="3" stroke-linejoin="round"><path d="M33 22 A8 8 0 0 1 38 36.2 L37 41 H29 L28 36.2 A8 8 0 0 1 33 22 Z"/></g><path d="M29.5 45 H36.5 M30.5 49 H35.5" stroke="#5D4E37" stroke-width="3" stroke-linecap="round"/><g class="eye-r"><path d="M67 22 A8 8 0 0 1 72 36.2 L71 41 H63 L62 36.2 A8 8 0 0 1 67 22 Z" fill="#FFFFFF" stroke="#5D4E37" stroke-width="3" stroke-linejoin="round"/><path d="M63.5 45 H70.5 M64.5 49 H69.5" stroke="#5D4E37" stroke-width="3" stroke-linecap="round"/></g><path class="smile" d="M25 57 Q50 85 75 57" stroke="#5D4E37" stroke-width="4" fill="none" stroke-linecap="round"/></g></svg>
+      <svg width="34" height="34" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#FAFAFA"/><g transform="translate(5 5) scale(0.9)"><circle cx="50" cy="50" r="45" fill="#FF9F45"/><g fill="none" stroke="#5D4E37" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M26 33 L38 40 L26 47"/><path d="M74 33 L62 40 L74 47"/></g><rect x="29" y="57" width="42" height="16" rx="6" fill="#FFFFFF" stroke="#5D4E37" stroke-width="4"/><path d="M29 65 L71 65 M43 57 L43 73 M57 57 L57 73" stroke="#5D4E37" stroke-width="2.5"/><path class="drop" d="M81 14 Q89 26 86 32 Q82 37 77 33 Q73 28 81 14 Z" fill="#4D96FF"/></g></svg>
+      <svg width="34" height="34" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#FAFAFA"/><g transform="translate(5 5) scale(0.9)"><circle cx="50" cy="50" r="45" fill="#A78BFA"/><g fill="none" stroke="#5D4E37" stroke-width="4" stroke-linecap="round"><path d="M25 58 Q50 85 75 58"/><path d="M24 47 L16 55"/></g><circle class="lens" cx="32" cy="38" r="11" fill="#EAF4FF" stroke="#5D4E37" stroke-width="4"/><rect x="54" y="30" width="26" height="18" rx="3.5" fill="#B07A4F" stroke="#5D4E37" stroke-width="3"/><path d="M61.5 30 V26 H72.5 V30" fill="none" stroke="#5D4E37" stroke-width="3" stroke-linejoin="round"/></g></svg>
+      <svg width="34" height="34" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#FAFAFA"/><g transform="translate(5 5) scale(0.9)"><circle cx="50" cy="50" r="45" fill="#6BCB77"/><g class="dollars" fill="#5D4E37" font-family="Arial, sans-serif" font-weight="700" font-size="24" text-anchor="middle"><text x="33" y="47">$</text><text x="67" y="47">$</text></g><path d="M25 55 Q50 85 75 55" stroke="#5D4E37" stroke-width="4" fill="none" stroke-linecap="round"/></g></svg>
+    </span>
+    <span class="word">Buddies</span>
+  </a>
+  <nav aria-label="Main">
+    <a href="#apps">Apps</a>
+    <a href="#about">About</a>
+    <a class="resume" href="Colin-Chiapello-Resume.pdf" download><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/></svg>Resume</a>
+    <a class="dark" href="https://github.com/colinchia2" target="_blank" rel="noopener">GitHub<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><path d="M8 7h9v9"/></svg></a>
+  </nav>
+</div></header>
+
+<section class="intro" aria-label="Meet my Buddies">
+  <div class="intro-inner">
+    <h2 class="display intro-title"><span class="title-line"><span class="meet">Meet my</span><span class="title-box">Buddies</span></span></h2>
+    <div class="intro-faces">
+      <span class="buddy"><span class="pop"><svg class="logo" viewBox="0 0 100 100" role="img" aria-label="TasteBuddy logo"><g transform="translate(5 5) scale(0.9)"><circle cx="50" cy="50" r="45" fill="#FFD93D"/><path d="M25 40 Q32 32 40 40" stroke="#5D4E37" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M60 40 Q67 32 75 40" stroke="#5D4E37" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M25 55 Q50 85 75 55" stroke="#5D4E37" stroke-width="4" fill="none" stroke-linecap="round"/><g class="tongue"><ellipse cx="50" cy="72" rx="12" ry="15" fill="#FF6B6B"/><path d="M50 65 L50 80" stroke="#E55555" stroke-width="2"/></g></g></svg></span></span>
+      <span class="buddy"><span class="pop"><svg class="logo" viewBox="0 0 100 100" role="img" aria-label="CheckBuddy logo"><g transform="translate(5 5) scale(0.9)"><circle cx="50" cy="50" r="45" fill="#E88C68"/><circle cx="36" cy="40" r="5" fill="#5D4E37"/><circle cx="64" cy="40" r="5" fill="#5D4E37"/><path class="check" d="M30 58 L44 71 L71 49" fill="none" stroke="#5D4E37" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></g></svg></span></span>
+      <span class="buddy"><span class="pop"><svg class="logo" viewBox="0 0 100 100" role="img" aria-label="SolveBuddy logo"><g transform="translate(5 5) scale(0.9)"><circle cx="50" cy="50" r="45" fill="#4D96FF"/><g fill="#FFFFFF" stroke="#5D4E37" stroke-width="3" stroke-linejoin="round"><path d="M33 22 A8 8 0 0 1 38 36.2 L37 41 H29 L28 36.2 A8 8 0 0 1 33 22 Z"/></g><path d="M29.5 45 H36.5 M30.5 49 H35.5" stroke="#5D4E37" stroke-width="3" stroke-linecap="round"/><g class="eye-r"><path d="M67 22 A8 8 0 0 1 72 36.2 L71 41 H63 L62 36.2 A8 8 0 0 1 67 22 Z" fill="#FFFFFF" stroke="#5D4E37" stroke-width="3" stroke-linejoin="round"/><path d="M63.5 45 H70.5 M64.5 49 H69.5" stroke="#5D4E37" stroke-width="3" stroke-linecap="round"/></g><path class="smile" d="M25 57 Q50 85 75 57" stroke="#5D4E37" stroke-width="4" fill="none" stroke-linecap="round"/></g></svg></span></span>
+      <span class="buddy"><span class="pop"><svg class="logo" viewBox="0 0 100 100" role="img" aria-label="SweatBuddy logo"><g transform="translate(5 5) scale(0.9)"><circle cx="50" cy="50" r="45" fill="#FF9F45"/><g fill="none" stroke="#5D4E37" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M26 33 L38 40 L26 47"/><path d="M74 33 L62 40 L74 47"/></g><rect x="29" y="57" width="42" height="16" rx="6" fill="#FFFFFF" stroke="#5D4E37" stroke-width="4"/><path d="M29 65 L71 65 M43 57 L43 73 M57 57 L57 73" stroke="#5D4E37" stroke-width="2.5"/><path class="drop" d="M81 14 Q89 26 86 32 Q82 37 77 33 Q73 28 81 14 Z" fill="#4D96FF"/></g></svg></span></span>
+      <span class="buddy"><span class="pop"><svg class="logo" viewBox="0 0 100 100" role="img" aria-label="GigBuddy logo"><g transform="translate(5 5) scale(0.9)"><circle cx="50" cy="50" r="45" fill="#A78BFA"/><g fill="none" stroke="#5D4E37" stroke-width="4" stroke-linecap="round"><path d="M25 58 Q50 85 75 58"/><path d="M24 47 L16 55"/></g><circle class="lens" cx="32" cy="38" r="11" fill="#EAF4FF" stroke="#5D4E37" stroke-width="4"/><rect x="54" y="30" width="26" height="18" rx="3.5" fill="#B07A4F" stroke="#5D4E37" stroke-width="3"/><path d="M61.5 30 V26 H72.5 V30" fill="none" stroke="#5D4E37" stroke-width="3" stroke-linejoin="round"/></g></svg></span></span>
+      <span class="buddy"><span class="pop"><svg class="logo" viewBox="0 0 100 100" role="img" aria-label="BillBuddy logo"><g transform="translate(5 5) scale(0.9)"><circle cx="50" cy="50" r="45" fill="#6BCB77"/><g class="dollars" fill="#5D4E37" font-family="Arial, sans-serif" font-weight="700" font-size="24" text-anchor="middle"><text x="33" y="47">$</text><text x="67" y="47">$</text></g><path d="M25 55 Q50 85 75 55" stroke="#5D4E37" stroke-width="4" fill="none" stroke-linecap="round"/></g></svg></span></span>
+    </div>
+  </div>
+</section>
+
+<section id="top" class="hero">
+  <h1 class="display">Bespoke apps for the things I love and do every day.</h1>
+  <p class="lede">The Buddy family is a set of apps I built to be my own buddies: each one automates or simplifies something I do, or care about, every day. One design language, shared foundations, six very different jobs.</p>
+</section>
+
+<section id="apps">
+  <div class="grid">
+
+    <article class="card reveal" tabindex="0" style="--app: #FFD93D">
+      <div class="card-top">
+        <svg class="logo" width="72" height="72" viewBox="0 0 100 100" role="img" aria-label="TasteBuddy logo"><rect x="1" y="1" width="98" height="98" rx="22" fill="#FFFFFF" stroke="#E5E5E5" stroke-width="2"/><g transform="translate(5 5) scale(0.9)"><circle cx="50" cy="50" r="45" fill="#FFD93D"/><path d="M25 40 Q32 32 40 40" stroke="#5D4E37" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M60 40 Q67 32 75 40" stroke="#5D4E37" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M25 55 Q50 85 75 55" stroke="#5D4E37" stroke-width="4" fill="none" stroke-linecap="round"/><g class="tongue"><ellipse cx="50" cy="72" rx="12" ry="15" fill="#FF6B6B"/><path d="M50 65 L50 80" stroke="#E55555" stroke-width="2"/></g></g></svg>
+        <span class="chip chip-strong">Beta · multi-user</span>
+      </div>
+      <div><h3 class="display">TasteBuddy</h3><p>Personalized restaurant recommendations and rankings that learn your taste.</p></div>
+      <div class="card-foot"><span class="live">Live</span><span class="tag">iOS</span><span class="tag">Web</span><a class="visit" href="https://tastebuddy-colinchia2.pythonanywhere.com/" target="_blank" rel="noopener">Visit site<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><path d="M8 7h9v9"/></svg></a></div>
+    </article>
+
+    <article class="card reveal" tabindex="0" style="--app: #E88C68">
+      <div class="card-top">
+        <svg class="logo" width="72" height="72" viewBox="0 0 100 100" role="img" aria-label="CheckBuddy logo"><rect x="1" y="1" width="98" height="98" rx="22" fill="#FFFFFF" stroke="#E5E5E5" stroke-width="2"/><g transform="translate(5 5) scale(0.9)"><circle cx="50" cy="50" r="45" fill="#E88C68"/><circle cx="36" cy="40" r="5" fill="#5D4E37"/><circle cx="64" cy="40" r="5" fill="#5D4E37"/><path class="check" d="M30 58 L44 71 L71 49" fill="none" stroke="#5D4E37" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
+        <span class="chip">Personal</span>
+      </div>
+      <div><h3 class="display">CheckBuddy</h3><p>A voice-first to-do list and personal assistant that lives on my phone.</p></div>
+      <div class="card-foot"><span class="live">Live</span><span class="tag">iOS</span></div>
+    </article>
+
+    <article class="card reveal" tabindex="0" style="--app: #4D96FF">
+      <div class="card-top">
+        <svg class="logo" width="72" height="72" viewBox="0 0 100 100" role="img" aria-label="SolveBuddy logo"><rect x="1" y="1" width="98" height="98" rx="22" fill="#FFFFFF" stroke="#E5E5E5" stroke-width="2"/><g transform="translate(5 5) scale(0.9)"><circle cx="50" cy="50" r="45" fill="#4D96FF"/><g fill="#FFFFFF" stroke="#5D4E37" stroke-width="3" stroke-linejoin="round"><path d="M33 22 A8 8 0 0 1 38 36.2 L37 41 H29 L28 36.2 A8 8 0 0 1 33 22 Z"/></g><path d="M29.5 45 H36.5 M30.5 49 H35.5" stroke="#5D4E37" stroke-width="3" stroke-linecap="round"/><g class="eye-r"><path d="M67 22 A8 8 0 0 1 72 36.2 L71 41 H63 L62 36.2 A8 8 0 0 1 67 22 Z" fill="#FFFFFF" stroke="#5D4E37" stroke-width="3" stroke-linejoin="round"/><path d="M63.5 45 H70.5 M64.5 49 H69.5" stroke="#5D4E37" stroke-width="3" stroke-linecap="round"/></g><path class="smile" d="M25 57 Q50 85 75 57" stroke="#5D4E37" stroke-width="4" fill="none" stroke-linecap="round"/></g></svg>
+        <span class="chip">Personal</span>
+      </div>
+      <div><h3 class="display">SolveBuddy</h3><p>Logic puzzles like Star Battle and Sudoku, with hints that teach the next step.</p></div>
+      <div class="card-foot"><span class="live">Live</span><span class="tag">iOS</span><span class="tag">Web</span></div>
+    </article>
+
+    <article class="card reveal" tabindex="0" style="--app: #FF9F45">
+      <div class="card-top">
+        <svg class="logo" width="72" height="72" viewBox="0 0 100 100" role="img" aria-label="SweatBuddy logo"><rect x="1" y="1" width="98" height="98" rx="22" fill="#FFFFFF" stroke="#E5E5E5" stroke-width="2"/><g transform="translate(5 5) scale(0.9)"><circle cx="50" cy="50" r="45" fill="#FF9F45"/><g fill="none" stroke="#5D4E37" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M26 33 L38 40 L26 47"/><path d="M74 33 L62 40 L74 47"/></g><rect x="29" y="57" width="42" height="16" rx="6" fill="#FFFFFF" stroke="#5D4E37" stroke-width="4"/><path d="M29 65 L71 65 M43 57 L43 73 M57 57 L57 73" stroke="#5D4E37" stroke-width="2.5"/><path class="drop" d="M81 14 Q89 26 86 32 Q82 37 77 33 Q73 28 81 14 Z" fill="#4D96FF"/></g></svg>
+        <span class="chip">Personal</span>
+      </div>
+      <div><h3 class="display">SweatBuddy</h3><p>Multi-sport workout analytics: every ride and run, with drill-down detail.</p></div>
+      <div class="card-foot"><span class="live">Live</span><span class="tag">Web</span></div>
+    </article>
+
+    <article class="card reveal" tabindex="0" style="--app: #A78BFA">
+      <div class="card-top">
+        <svg class="logo" width="72" height="72" viewBox="0 0 100 100" role="img" aria-label="GigBuddy logo"><rect x="1" y="1" width="98" height="98" rx="22" fill="#FFFFFF" stroke="#E5E5E5" stroke-width="2"/><g transform="translate(5 5) scale(0.9)"><circle cx="50" cy="50" r="45" fill="#A78BFA"/><g fill="none" stroke="#5D4E37" stroke-width="4" stroke-linecap="round"><path d="M25 58 Q50 85 75 58"/><path d="M24 47 L16 55"/></g><circle class="lens" cx="32" cy="38" r="11" fill="#EAF4FF" stroke="#5D4E37" stroke-width="4"/><rect x="54" y="30" width="26" height="18" rx="3.5" fill="#B07A4F" stroke="#5D4E37" stroke-width="3"/><path d="M61.5 30 V26 H72.5 V30" fill="none" stroke="#5D4E37" stroke-width="3" stroke-linejoin="round"/></g></svg>
+        <span class="chip">Personal</span>
+      </div>
+      <div><h3 class="display">GigBuddy</h3><p>Finds job postings on a schedule and lines them up in a sheet for review.</p></div>
+      <div class="card-foot"><span class="live">Live</span><span class="tag">Google Sheets</span><span class="tag">Email</span></div>
+    </article>
+
+    <article class="card reveal" tabindex="0" style="--app: #6BCB77">
+      <div class="card-top">
+        <svg class="logo" width="72" height="72" viewBox="0 0 100 100" role="img" aria-label="BillBuddy logo"><rect x="1" y="1" width="98" height="98" rx="22" fill="#FFFFFF" stroke="#E5E5E5" stroke-width="2"/><g transform="translate(5 5) scale(0.9)"><circle cx="50" cy="50" r="45" fill="#6BCB77"/><g class="dollars" fill="#5D4E37" font-family="Arial, sans-serif" font-weight="700" font-size="24" text-anchor="middle"><text x="33" y="47">$</text><text x="67" y="47">$</text></g><path d="M25 55 Q50 85 75 55" stroke="#5D4E37" stroke-width="4" fill="none" stroke-linecap="round"/></g></svg>
+        <span class="chip">Personal</span>
+      </div>
+      <div><h3 class="display">BillBuddy</h3><p>Tracks every subscription, what I pay and when it renews, with reminders.</p></div>
+      <div class="card-foot"><span class="live">Live</span><span class="tag">Web</span><span class="tag">Email</span></div>
+    </article>
+
+  </div>
+</section>
+
+<section id="about" class="about reveal">
+  <div class="about-text">
+    <p class="eyebrow">About</p>
+    <h2 class="display">Hi, I'm Colin.</h2>
+    <p>Early adopter and fluent in bespoke AI app development. My professional background is consulting, strategy / finance, and pricing. I build AI tools the way I'd build a model: start with the problem, keep it simple, make it reliable.</p>
+    <p>I build with AI as a teammate, using a 20-60-20 rule. The first 20% is mine: I decide what I want, write the plan and explain it. The middle 60% is where Claude Code and my other AI tools build and automate the busywork. The last 20% is mine again: I test, refine and iterate until it's exactly right. Because the middle moves so fast, I can lay out several options side by side and pick the best one in minutes.</p>
+  </div>
+  <div class="facts">
+    <div class="fact"><p class="label">Built with</p><p class="value">Python, React Native (Expo), GitHub, PythonAnywhere</p></div>
+    <div class="fact"><p class="label">AI tools</p><p class="value">Claude Code, Gemini, Perplexity, Firecrawl, ChatGPT</p></div>
+    <div class="fact"><p class="label">Runs on</p><p class="value">iOS, web, scheduled jobs</p></div>
+    <div class="fact"><p class="label">Contact</p><p class="value"><a href="https://www.linkedin.com/in/colin-chiapello-190a8791/">LinkedIn</a><br><a href="mailto:colinchia2@gmail.com">colinchia2@gmail.com</a></p></div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Colin · Buddy</span>
+  <span>Made with Claude Code</span>
+</footer>
+
+</div>
+<div id="fx" aria-hidden="true"></div>
+<script>
+(function () {
+  var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reveals = document.querySelectorAll('.reveal');
+  if (still || !('IntersectionObserver' in window)) { reveals.forEach(function (r) { r.classList.add('in'); }); document.documentElement.classList.add('static'); if (still) return; }
+
+  // Each face does its own move: on arrival, hover and tap.
+  function play(el) { el.classList.remove('play'); void el.offsetWidth; el.classList.add('play'); }
+  document.querySelectorAll('.card, .buddy').forEach(function (c) {
+    c.addEventListener('mouseenter', function () { play(c); });
+    c.addEventListener('click', function () { play(c); });
+    c.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(c); } });
+  });
+
+  // Scroll reveals: headline, intro, cards, About come in as they reach the screen; a card plays its move once landed.
+  function startReveals() { if (!('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var row = e.target.classList.contains('card')
+          ? Array.prototype.filter.call(document.querySelectorAll('.card.reveal:not(.in)'), function (c) { return c.offsetTop === e.target.offsetTop; })
+          : [e.target];
+        row.forEach(function (el) {
+          el.classList.add('in'); io.unobserve(el);
+          if (el.classList.contains('card')) setTimeout(function () { play(el); }, 650);
+        });
+      });
+    }, { threshold: 0.2, rootMargin: '0px 0px -6% 0px' });
+    reveals.forEach(function (r) { io.observe(r); });
+  }
+
+  // Opening: the six pop in one at a time and each does its move.
+  var top = document.querySelector('.top'), word = top.querySelector('.word'), nav = top.querySelector('nav');
+  var faces = top.querySelector('.faces'), hf = Array.prototype.slice.call(faces.querySelectorAll('svg'));
+  var buddies = Array.prototype.slice.call(document.querySelectorAll('.buddy'));
+  var title = document.querySelector('.title-box'), meet = document.querySelector('.meet');
+  var intro = document.querySelector('.intro');
+  function enter() {
+    intro.classList.add('enter');
+    buddies.forEach(function (b, i) { setTimeout(function () { play(b); }, 1000 + i * 150); });
+    setTimeout(flyHome, 2700);
+  }
+  function whenShown() { if (document.visibilityState === 'visible') (document.fonts ? document.fonts.ready : Promise.resolve()).then(function () { setTimeout(enter, 100); }); else document.addEventListener('visibilitychange', whenShown, { once: true }); }
+  if (document.readyState === 'complete') whenShown(); else addEventListener('load', whenShown);
+  function wave() { faces.classList.remove('wave'); void faces.offsetWidth; faces.classList.add('wave'); }
+
+  // After the hello the faces fly home on their own, one after another; "Meet my" fades, "Buddies" lands last and snaps.
+  // The page lights up behind. A scroll, key or tap during the opening skips straight to this.
+  var flown = false, FLIGHT = 800, hero = document.getElementById('top'), root = document.documentElement;
+  var fly = document.createElement('div'); fly.id = 'fly'; fly.setAttribute('aria-hidden', 'true'); document.body.appendChild(fly);
+  root.style.overflow = 'hidden';
+  function launch(el, target, delay, fadeOnly) {
+    var r = el.getBoundingClientRect(), cs = getComputedStyle(el), c = el.cloneNode(true);
+    c.style.left = r.left + 'px'; c.style.top = r.top + 'px'; c.style.width = r.width + 'px'; c.style.height = r.height + 'px';
+    c.style.font = cs.font; c.style.letterSpacing = cs.letterSpacing; c.style.color = cs.color; c.style.whiteSpace = 'nowrap';
+    c.style.transitionDelay = delay + 'ms';
+    fly.appendChild(c);
+    requestAnimationFrame(function () { requestAnimationFrame(function () {
+      if (fadeOnly) { c.style.opacity = '0'; return; }
+      var t = target.getBoundingClientRect();
+      var k = target === word ? parseFloat(getComputedStyle(word).fontSize) / parseFloat(cs.fontSize) : t.width / r.width;
+      var y = t.top + (t.height - r.height * k) / 2;
+      c.style.transform = 'translate(' + (t.left - r.left).toFixed(1) + 'px,' + (y - r.top).toFixed(1) + 'px) scale(' + k.toFixed(4) + ')';
+    }); });
+  }
+  function flyHome() {
+    if (flown) return; flown = true;
+    top.classList.add('solid');
+    nav.style.opacity = '1'; nav.style.pointerEvents = '';
+    buddies.forEach(function (b, i) { launch(b, hf[i], i * 45); });
+    // The whole line flies as one piece: "Meet my" fades on the way, "Buddies" lands on the header word.
+    var line = document.querySelector(".title-line"), lr = line.getBoundingClientRect(), br = title.getBoundingClientRect(), lcs = getComputedStyle(line);
+    var lc = line.cloneNode(true);
+    lc.style.left = lr.left + "px"; lc.style.top = lr.top + "px"; lc.style.font = lcs.font; lc.style.letterSpacing = lcs.letterSpacing; lc.style.color = lcs.color; lc.style.transitionDelay = "140ms";
+    fly.appendChild(lc);
+    var lm = lc.querySelector(".meet"); lm.style.transition = "opacity .55s ease .14s";
+    requestAnimationFrame(function () { requestAnimationFrame(function () {
+      var t = word.getBoundingClientRect(), k = parseFloat(getComputedStyle(word).fontSize) / parseFloat(lcs.fontSize);
+      var x = t.left - (br.left - lr.left) * k, y = t.top + (t.height - br.height * k) / 2 - (br.top - lr.top) * k;
+      lc.style.transform = "translate(" + (x - lr.left).toFixed(1) + "px," + (y - lr.top).toFixed(1) + "px) scale(" + k.toFixed(4) + ")";
+      lm.style.opacity = "0";
+    }); });
+    intro.querySelector('.intro-inner').style.visibility = 'hidden';
+    intro.classList.add('done');
+    setTimeout(function () { hero.classList.add('lit'); }, 300);
+    setTimeout(function () {
+      faces.style.opacity = '1'; word.style.opacity = '1'; fly.innerHTML = '';
+      root.style.overflow = '';
+      wave();
+      setTimeout(function () { word.classList.remove('snap'); void word.offsetWidth; word.classList.add('snap'); }, 200);
+      startReveals();
+    }, FLIGHT + 200);
+  }
+  ['wheel', 'touchstart', 'keydown'].forEach(function (t) { addEventListener(t, flyHome, { passive: true }); });
+  intro.addEventListener('pointerdown', flyHome);
+
+  // Press and drag anywhere: a trail of the six faces that stays put on the page. A tap drops one.
+  var fx = document.getElementById('fx');
+  var n = 0, down = false, lx = 0, ly = 0;
+  function drop(x, y) {
+    var f = hf[n++ % hf.length].cloneNode(true);
+    f.style.left = x + 'px'; f.style.top = y + 'px';
+    f.style.setProperty('--r', (Math.random() * 40 - 20).toFixed(0) + 'deg');
+    f.addEventListener('animationend', function (e) { if (e.animationName === 'fade') f.remove(); });
+    fx.appendChild(f);
+  }
+  document.addEventListener('pointerdown', function (e) {
+    if (e.button !== 0 || e.target.closest('a, button, .card, .buddy')) return;
+    down = true; lx = e.pageX; ly = e.pageY; document.body.classList.add('drawing'); drop(lx, ly);
+  });
+  document.addEventListener('pointermove', function (e) {
+    if (!down || Math.hypot(e.pageX - lx, e.pageY - ly) < 34) return;
+    lx = e.pageX; ly = e.pageY; drop(lx, ly);
+  });
+  ['pointerup', 'pointercancel', 'blur'].forEach(function (t) { addEventListener(t, function () { down = false; document.body.classList.remove('drawing'); }); });
+})();
+</script>
+</body>
+</html>
