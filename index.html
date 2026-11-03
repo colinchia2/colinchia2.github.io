@@ -141,6 +141,49 @@
   .hint { margin: 0; font-size: 14px; color: var(--muted); }
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } #fx { display: none; } }
   @media (max-width: 520px) { .about { padding: 28px 20px; } .facts { grid-template-columns: minmax(0, 1fr); } .apps-head h2 { font-size: 36px; } }
+  .menu-btn, .scrim { display: none; }
+  /* Phones (Colin 11/2): one short header row (the six faces, "Buddies", a menu button). The menu drops down over the
+     page and dims it; a tap outside, a link, a scroll or Esc closes it. The opening shows the six faces three and three;
+     the six apps sit two across in smaller cards, so all six fit one screen. Desktop unchanged. */
+  @media (max-width: 600px) {
+    .wrap { padding-top: 104px; gap: 56px; }
+    .bar { position: relative; flex-wrap: nowrap; padding-top: 10px; padding-bottom: 10px; }
+    .brand { font-size: 20px; gap: 8px; }
+    .faces svg { width: 28px; height: 28px; } .faces svg + svg { margin-left: -8px; }
+    .menu-btn { display: grid; place-content: center; gap: 5px; width: 44px; height: 44px; border: 0; border-radius: 999px; background: var(--ink); cursor: pointer; transition: opacity .4s ease .2s; }
+    .menu-btn span { display: block; width: 18px; height: 2px; border-radius: 2px; background: #FFFFFF; transition: transform .3s cubic-bezier(.2,.8,.2,1), opacity .2s ease; }
+    .js:not(.static) .top .menu-btn { opacity: 0; }
+    .top.open .menu-btn span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .top.open .menu-btn span:nth-child(2) { opacity: 0; }
+    .top.open .menu-btn span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    nav { position: absolute; top: calc(100% - 2px); left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px));
+      flex-direction: column; flex-wrap: nowrap; gap: 4px; padding: 10px; border-radius: 20px; background: var(--card); box-shadow: 0 18px 40px rgba(0,0,0,.18), 0 0 0 1px var(--line);
+      clip-path: inset(0 0 100% 0 round 20px); visibility: hidden; transition: clip-path .34s cubic-bezier(.2,.8,.2,1), visibility 0s linear .34s; }
+    .top.open nav { clip-path: inset(0 0 0 0 round 20px); visibility: visible; transition: clip-path .34s cubic-bezier(.2,.8,.2,1), visibility 0s; }
+    nav a { min-height: 52px; padding: 12px 16px; font-size: 18px; font-weight: 600; border-radius: 14px; }
+    nav a.resume, nav a.dark { justify-content: center; padding: 12px 16px; margin-top: 4px; }
+    .top.open nav a { animation: menuin .36s cubic-bezier(.2,.8,.2,1) both; }
+    .top.open nav a:nth-child(2) { animation-delay: .04s; } .top.open nav a:nth-child(3) { animation-delay: .08s; } .top.open nav a:nth-child(4) { animation-delay: .12s; }
+    .scrim { display: block; position: fixed; inset: 0; z-index: 39; background: rgba(17,17,17,.38); opacity: 0; pointer-events: none; transition: opacity .28s ease; }
+    .scrim.on { opacity: 1; pointer-events: auto; }
+    h1 { font-size: clamp(32px, 9.5vw, 40px); line-height: 1.06; }
+    .lede { font-size: 17px; }
+    .intro-title { font-size: min(11vw, 52px); }
+    .intro-faces { display: grid; grid-template-columns: repeat(3, auto); justify-content: center; gap: 14px 22px; }
+    .buddy { width: min(22vw, 92px); height: min(22vw, 92px); }
+    .grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+    .card { gap: 8px; padding: 16px 12px 12px; min-height: 0; border-radius: 16px; }
+    .card::before { height: 4px; }
+    .card-top { gap: 6px; } .card-top .logo { width: 40px; height: 40px; flex-shrink: 0; }
+    .chip { font-size: 10px; padding: 2px 7px; white-space: nowrap; }
+    .card h3 { font-size: 17px; margin-bottom: 3px; }
+    .card p { font-size: 13px; line-height: 1.35; }
+    .card-foot { gap: 5px; }
+    .tag { font-size: 11px; padding: 1px 7px; } .live { font-size: 12px; margin-right: 0; }
+    .visit { margin-left: 0; min-height: 30px; padding: 0 10px; font-size: 12px; }
+    .js .grid .card.reveal:not(.in):nth-child(n) { transform: translateY(28px); }
+  }
+  @keyframes menuin { from { opacity: 0; transform: translateY(-8px); } }
 </style>
 </head>
 <body>
@@ -158,13 +201,15 @@
     </span>
     <span class="word">Buddies</span>
   </a>
-  <nav aria-label="Main">
+  <button class="menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mainnav"><span></span><span></span><span></span></button>
+  <nav id="mainnav" aria-label="Main">
     <a href="#apps">Apps</a>
     <a href="#about">About</a>
     <a class="resume" href="Colin-Chiapello-Resume.pdf" download><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/></svg>Resume</a>
     <a class="dark" href="https://github.com/colinchia2" target="_blank" rel="noopener">GitHub<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><path d="M8 7h9v9"/></svg></a>
   </nav>
 </div></header>
+<div class="scrim" aria-hidden="true"></div>
 
 <section class="intro" aria-label="Meet my Buddies">
   <div class="intro-inner">
@@ -268,6 +313,22 @@
 </div>
 <div id="fx" aria-hidden="true"></div>
 <script>
+// Phone menu (Colin 11/2): the button drops the links over a dimmed page. A tap outside, a link, a scroll or Esc closes it.
+var menuBtn = document.querySelector('.menu-btn');
+(function () {
+  var top = document.querySelector('.top'), scrim = document.querySelector('.scrim'), y0 = 0;
+  function set(open) {
+    top.classList.toggle('open', open); scrim.classList.toggle('on', open);
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false'); menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Menu');
+    if (open) { y0 = scrollY; top.classList.add('solid'); }
+  }
+  menuBtn.addEventListener('click', function () { set(!top.classList.contains('open')); });
+  scrim.addEventListener('click', function () { set(false); });
+  document.getElementById('mainnav').addEventListener('click', function (e) { if (e.target.closest('a')) set(false); });
+  addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+  addEventListener('scroll', function () { if (top.classList.contains('open') && Math.abs(scrollY - y0) > 24) set(false); }, { passive: true });
+  matchMedia('(max-width: 600px)').addEventListener('change', function (m) { if (!m.matches) set(false); });
+})();
 (function () {
   var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var reveals = document.querySelectorAll('.reveal');
@@ -335,7 +396,7 @@
   function flyHome() {
     if (flown) return; flown = true;
     top.classList.add('solid');
-    nav.style.opacity = '1'; nav.style.pointerEvents = '';
+    nav.style.opacity = '1'; nav.style.pointerEvents = ''; menuBtn.style.opacity = '1';
     buddies.forEach(function (b, i) { launch(b, hf[i], i * 45); });
     // The whole line flies as one piece: "Meet my" fades on the way, "Buddies" lands on the header word.
     var line = document.querySelector(".title-line"), lr = line.getBoundingClientRect(), br = title.getBoundingClientRect(), lcs = getComputedStyle(line);
